@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://www.choice.com/eduardo/spring/soap/gen"
+           targetNamespace="http://www.choice.com/eduardo/spring/soap/gen"
+           elementFormDefault="qualified">
+
+    <xs:element name="getAmenitiesRequest"/>
+    <xs:element name="getAmenitiesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Amenity" maxOccurs="unbounded" minOccurs="0" type="tns:amenity"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getHotelsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="page" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getHotelsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Hotel" type="tns:hotel" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="pages" type="xs:int"></xs:attribute>
+            <xs:attribute name="elements" type="xs:int"></xs:attribute>
+            <xs:attribute name="currentPage" type="xs:int"></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createHotelRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Hotel" type="tns:hotel"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateHotelRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Hotel" type="tns:hotel"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteHotelRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="commonResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean"/>
+                <xs:element name="message" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="hotel">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="address" type="xs:string"/>
+            <xs:element name="ratting" type="xs:int"/>
+            <xs:element name="amenities" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="amenity">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+</xs:schema>
