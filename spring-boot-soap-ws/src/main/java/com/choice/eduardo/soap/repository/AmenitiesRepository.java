@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface AmenitiesRepository extends JpaRepository<Amenity, Long> {
-    List<Amenity> findAllByActiveIsTrue();
+    List<Amenity> findAllByActiveIsTrueOrderByIdAsc();
 }

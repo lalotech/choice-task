@@ -34,27 +34,28 @@ public class HotelProvider implements HotelService {
     private AmenitiesRepository amenitiesRepository;
 
     @Override
-    public Pair<List<Hotel>, Map<String, Integer>> readBy(Map<String, Object> fields, Integer page) {
+    public Pair<List<Hotel>, Map<String, Integer>> readBy(Map<String, Object> fields, Integer pageNumber, Integer pageSize) {
         //filter by name
-        log.info("Reading hotels by page {} and filter fields:{}", page, fields);
+        log.info("Reading hotels by page {} and filter fields:{}", pageNumber, fields);
         Page<Hotel> data;
+        Integer maxPageSize = pageSize != null && pageSize <= MAX_PAGE_SIZE ? pageSize : MAX_PAGE_SIZE;
         if (fields.containsKey(HotelFilter.NAME.getKey())) {
             data = hotelsRepository.findByNameContainsAndActive(
                     fields.get(HotelFilter.NAME.getKey()).toString(),
-                    PageRequest.of(page, HotelService.PAGE_SIZE), Boolean.TRUE);
+                    PageRequest.of(pageNumber, maxPageSize), Boolean.TRUE);
         } else {
             log.debug("no filter by `name` found");
             //if there is no filter by name or other field, we return the page 1 with the size of the page config
-            page = 0;
-            data = hotelsRepository.findAll(PageRequest.of(page, HotelService.PAGE_SIZE));
+            pageNumber = 0;
+            data = hotelsRepository.findAll(PageRequest.of(pageNumber, maxPageSize));
         }
-        return Pair.of(data.stream().collect(Collectors.toList()), this.buildMapMetadata(data, page));
+        return Pair.of(data.stream().collect(Collectors.toList()), this.buildMapMetadata(data, pageNumber));
     }
 
     @Override
     public List<Amenity> readAmenities() {
         List<Amenity> amenities = new ArrayList<>();
-        amenitiesRepository.findAllByActiveIsTrue().forEach(amenity -> amenities.add(amenity));
+        amenitiesRepository.findAllByActiveIsTrueOrderByIdAsc().forEach(amenity -> amenities.add(amenity));
         return amenities;
     }
 

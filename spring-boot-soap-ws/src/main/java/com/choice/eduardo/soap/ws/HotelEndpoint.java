@@ -37,10 +37,13 @@ public class HotelEndpoint {
         try {
             hotelService.createHotel(request.getHotel());
             response.setSuccess(true);
-        }catch (Exception e) {
+        } catch (IllegalArgumentException iae) {
+            log.error("Error creating hotel", iae);
+            response.setSuccess(false);
+            response.setMessage(iae.getMessage());
+        } catch (Exception e) {
             log.error("Error creating hotel", e);
             response.setSuccess(false);
-            response.setMessage(e.getMessage());
         }
         return response;
     }
@@ -52,7 +55,7 @@ public class HotelEndpoint {
         try {
             hotelService.updateHotel(request.getHotel());
             response.setSuccess(true);
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error("Error updating hotel", e);
             response.setSuccess(false);
             response.setMessage(e.getMessage());
@@ -70,17 +73,19 @@ public class HotelEndpoint {
     @PayloadRoot(namespace = HotelService.NAMESPACE, localPart = "getHotelsRequest")
     @ResponsePayload
     public GetHotelsResponse getHotels(@RequestPayload GetHotelsRequest request) {
-        log.debug("getHotels name: {} page:{}", request.getName(), request.getPage());
+        log.debug("getHotels name: {} page:{}", request.getName(), request.getPageNumber());
         GetHotelsResponse response = new GetHotelsResponse();
 
         Map<String, Object> filters = new HashMap<>();
         filters.put(HotelFilter.NAME.getKey(), (request.getName() != null ? request.getName() : ""));
+        Integer pageNumber = (request.getPageNumber() != null ? request.getPageNumber() : 1);
 
-        Pair<List<com.choice.eduardo.soap.model.Hotel>, Map<String, Integer>> data = hotelService.readBy(filters, request.getPage()-1);
+        Pair<List<com.choice.eduardo.soap.model.Hotel>, Map<String, Integer>> data = hotelService.readBy(filters, pageNumber - 1, request.getPageSize());
         data.getFirst().stream().
                 forEach(hotel ->
                         response.getHotel().add(HotelDataMapper.hotelToHotelXml(hotel))
                 );
+        // fill the metadata
         response.setPages(data.getSecond().get(PageFields.PAGES.getKey()));
         response.setElements(data.getSecond().get(PageFields.ELEMENTS.getKey()));
         response.setCurrentPage(data.getSecond().get(PageFields.CURRENT_PAGE.getKey()));
@@ -92,7 +97,7 @@ public class HotelEndpoint {
     public GetAmenitiesResponse getAmenities() {
         log.debug("getAmenities invoked");
         GetAmenitiesResponse response = new GetAmenitiesResponse();
-        hotelService.readAmenities().stream().parallel()
+        hotelService.readAmenities().stream()
                 .forEach(amenity ->
                         response.getAmenity().add(HotelDataMapper.amenityToAmenityXml(amenity))
                 );
