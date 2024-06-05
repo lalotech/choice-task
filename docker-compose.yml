@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+   db-choice:
+        container_name: db-choice
+        image: mariadb
+        ports:
+            - 3306:3306
+        environment:
+            MARIADB_DATABASE: choice
+            MARIADB_ROOT_PASSWORD: mypass
+        volumes:
+            - './db-scripts/:/docker-entrypoint-initdb.d/'

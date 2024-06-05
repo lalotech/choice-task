@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: spring-boot-soap-ws
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        show_sql: false
+  datasource:
+    username: root
+    password: mypass
+    url: jdbc:mariadb://localhost:3306/choice
+    driver-class-name: org.mariadb.jdbc.Driver
+
+logging:
+  level:
+    root: ERROR
+    org.springframework.web: ERROR
+    com.choice: DEBUG
+    org.hibernate: ERROR
