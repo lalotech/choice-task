@@ -16,8 +16,9 @@
     <xs:element name="getHotelsRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="name" type="xs:string"/>
-                <xs:element name="page" type="xs:int"/>
+                <xs:element name="name" type="xs:string" minOccurs="0"/>
+                <xs:element name="pageNumber" type="xs:int" minOccurs="0"/>
+                <xs:element name="pageSize" type="xs:int" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -61,7 +62,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="success" type="xs:boolean"/>
-                <xs:element name="message" type="xs:string"/>
+                <xs:element name="message" type="xs:string" minOccurs="0" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>

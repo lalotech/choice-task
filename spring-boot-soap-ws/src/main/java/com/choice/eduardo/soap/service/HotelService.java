@@ -12,7 +12,7 @@ public interface HotelService {
     /**
      * the default 'page' size used in the pagination, this can come from the system properties
      */
-    Integer PAGE_SIZE = 2;
+    Integer MAX_PAGE_SIZE = 10;
     /**
      * the namespace value in the application
      */
@@ -22,10 +22,11 @@ public interface HotelService {
      * Read all the Hotels base on the filter map property and use the `page` number to enable pagination of the records
      *
      * @param fields {map} - The map of the filters
-     * @param page {Integer} - the page number
+     * @param pageNumber {Integer} - the page number
+     * @param pageSize {Integer} - the page size
      * @return
      */
-    Pair<List<Hotel>, Map<String, Integer>> readBy(Map<String, Object> fields, Integer page);
+    Pair<List<Hotel>, Map<String, Integer>> readBy(Map<String, Object> fields, Integer pageNumber, Integer pageSize);
 
     /**
      * Read all the active Amenities in the DB

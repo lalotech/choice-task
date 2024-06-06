@@ -3,6 +3,7 @@ package com.choice.eduardo.soap.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,10 +18,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "Amenities")
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Amenity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NonNull
     private Long id;
+    @NonNull
     @Column(nullable = false, unique = true, name = "name")
     private String name;
     @Column(name = "active")
