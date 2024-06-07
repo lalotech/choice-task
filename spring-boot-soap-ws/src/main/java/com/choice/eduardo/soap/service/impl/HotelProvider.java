@@ -53,6 +53,11 @@ public class HotelProvider implements HotelService {
     }
 
     @Override
+    public Hotel readById(Long id) {
+        return hotelsRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public List<Amenity> readAmenities() {
         List<Amenity> amenities = new ArrayList<>();
         amenitiesRepository.findAllByActiveIsTrueOrderByIdAsc().forEach(amenity -> amenities.add(amenity));
@@ -74,7 +79,7 @@ public class HotelProvider implements HotelService {
 
     @Transactional
     @Override
-    public void createHotel(com.choice.eduardo.spring.soap.gen.Hotel hotel) throws IllegalArgumentException {
+    public Hotel createHotel(com.choice.eduardo.spring.soap.gen.Hotel hotel) throws IllegalArgumentException {
         log.debug("Creating a hotel with name:{}", hotel.getName());
         Hotel exists = hotelsRepository.findByName(hotel.getName());
         if (exists != null) {
@@ -88,7 +93,7 @@ public class HotelProvider implements HotelService {
             newHotel.setActive(Boolean.TRUE);
             newHotel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
             newHotel.setLastUpdated(LocalDateTime.now(ZoneId.of("UTC")));
-            hotelsRepository.save(newHotel);
+            return hotelsRepository.save(newHotel);
         }
     }
 
@@ -110,7 +115,7 @@ public class HotelProvider implements HotelService {
             }
             fetched.setName(hotel.getName());
             fetched.setAddress(hotel.getAddress());
-            fetched.setRatting(hotel.getRatting());
+            fetched.setRating(hotel.getRating());
             fetched.setLastUpdated(LocalDateTime.now(ZoneId.of("UTC")));
             hotelsRepository.save(fetched);
         }

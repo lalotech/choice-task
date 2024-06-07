@@ -29,6 +29,13 @@ public interface HotelService {
     Pair<List<Hotel>, Map<String, Integer>> readBy(Map<String, Object> fields, Integer pageNumber, Integer pageSize);
 
     /**
+     * Read the Hotel by ID
+     * @param id {Long} - the id of the Hotel to retrieve
+     * @return {Hotel} - the hotel if exists
+     */
+    Hotel readById(Long id);
+
+    /**
      * Read all the active Amenities in the DB
      * @return {list} - A list of Amenities
      */
@@ -43,8 +50,9 @@ public interface HotelService {
     /**
      * Create Hotel if not exists already
      * @param hotel {Hotel} - the Hotel to create
+     * @return {Hotel} - the new hotel entity
      */
-    void createHotel(com.choice.eduardo.spring.soap.gen.Hotel hotel);
+    Hotel createHotel(com.choice.eduardo.spring.soap.gen.Hotel hotel);
 
     /**
      *

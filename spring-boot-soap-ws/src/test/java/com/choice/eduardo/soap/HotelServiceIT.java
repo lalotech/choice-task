@@ -46,7 +46,7 @@ public class HotelServiceIT {
         hotel.setName(testHotelName);
         hotel.setAddress("Test Address");
         hotel.setAmenities("1,2");
-        hotel.setRatting(3);
+        hotel.setRating(3);
         filters.put(HotelFilter.NAME.getKey(), testHotelName);
 
         //when
@@ -68,7 +68,7 @@ public class HotelServiceIT {
         com.choice.eduardo.soap.model.Hotel current = before.getFirst().get(0);
         Hotel update = HotelDataMapper.hotelToHotelXml(current);
         update.setAddress("New Address");
-        update.setRatting(5);
+        update.setRating(5);
         update.setAmenities("1,2,3,4");
 
         //when
@@ -78,7 +78,7 @@ public class HotelServiceIT {
         Pair<List<com.choice.eduardo.soap.model.Hotel>,Map<String,Integer>> after = hotelService.readBy(filters, 0, pageSize);
         com.choice.eduardo.soap.model.Hotel newUpdate = after.getFirst().get(0);
         assertEquals(newUpdate.getAddress(), update.getAddress());
-        assertEquals(newUpdate.getRatting(), update.getRatting());
+        assertEquals(newUpdate.getRating(), update.getRating());
         assertEquals(newUpdate.getName(), update.getName());
         String amenitiesIds = HotelDataMapper.buildAmenitiesJoiner(newUpdate.getAmenities());
         assertEquals(update.getAmenities(), amenitiesIds);

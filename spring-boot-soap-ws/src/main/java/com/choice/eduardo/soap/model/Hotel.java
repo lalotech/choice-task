@@ -1,6 +1,5 @@
 package com.choice.eduardo.soap.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -15,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -39,9 +36,9 @@ public class Hotel implements Serializable {
     @Column(nullable = false, name = "address")
     @NonNull
     private String address;
-    @Column(nullable = false, name = "ratting", columnDefinition = "integer default 0")
+    @Column(nullable = false, name = "rating", columnDefinition = "integer default 0")
     @NonNull
-    private Integer ratting;
+    private Integer rating;
     @Column(name = "active")
     @NonNull
     private Boolean active;

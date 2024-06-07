@@ -22,7 +22,7 @@ public class HotelDataMapper {
         hotelXml.setId(hotel.getId());
         hotelXml.setName(hotel.getName());
         hotelXml.setAddress(hotel.getAddress());
-        hotelXml.setRatting(hotel.getRatting());
+        hotelXml.setRating(hotel.getRating());
         // omit amenities and active fields
         return hotelXml;
     }
@@ -37,7 +37,7 @@ public class HotelDataMapper {
         hotelxml.setId(hotel.getId());
         hotelxml.setName(hotel.getName());
         hotelxml.setAddress(hotel.getAddress());
-        hotelxml.setRatting(hotel.getRatting());
+        hotelxml.setRating(hotel.getRating());
         hotelxml.setAmenities(HotelDataMapper.buildAmenitiesJoiner(hotel.getAmenities()));
         return hotelxml;
     }
