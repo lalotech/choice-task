@@ -57,7 +57,8 @@ public interface HotelService {
     /**
      *
      * @param hotel {Hotel} - the Hotel to update
+     * @return {Hotel} - the updated hotel entity
      */
-    void updateHotel(com.choice.eduardo.spring.soap.gen.Hotel hotel);
+    Hotel updateHotel(com.choice.eduardo.spring.soap.gen.Hotel hotel);
 
 }

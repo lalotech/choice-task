@@ -56,8 +56,13 @@ public class HotelEndpoint {
     public CommonResponse updateHotel(@RequestPayload UpdateHotelRequest request) {
         CommonResponse response = new CommonResponse();
         try {
-            hotelService.updateHotel(request.getHotel());
+            Hotel hotel = hotelService.updateHotel(request.getHotel());
+            response.setId(hotel.getId());
             response.setSuccess(true);
+        } catch (IllegalArgumentException iae) {
+            log.error("Error updating hotel", iae);
+            response.setSuccess(false);
+            response.setMessage(iae.getMessage());
         } catch (Exception e) {
             log.error("Error updating hotel", e);
             response.setSuccess(false);
@@ -68,9 +73,21 @@ public class HotelEndpoint {
 
     @PayloadRoot(namespace = HotelService.NAMESPACE, localPart = "deleteHotelRequest")
     @ResponsePayload
-    public void deleteHotel(@RequestPayload DeleteHotelRequest request) {
+    public CommonResponse deleteHotel(@RequestPayload DeleteHotelRequest request) {
         log.info("Request to delete hotel id:{}", request.getId());
-        hotelService.deleteHotel(request.getId());
+        CommonResponse response = new CommonResponse();
+        try {
+            hotelService.deleteHotel(request.getId());
+            response.setSuccess(true);
+        } catch (IllegalArgumentException iae) {
+            log.error("Error deleting hotel", iae);
+            response.setSuccess(false);
+            response.setMessage(iae.getMessage());
+        } catch (Exception e) {
+            log.error("Error deleting hotel", e);
+            response.setSuccess(false);
+        }
+        return response;
     }
 
     @PayloadRoot(namespace = HotelService.NAMESPACE, localPart = "getHotelsRequest")

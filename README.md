@@ -6,6 +6,26 @@
 * `spring-mvc-rest` - Apache Tomcat 8 and Spring 5
 *  `database` - MariaDB 
 
-## Assumptions
+### Assumptions
 
-* 
+* the amenities is just a `catalog` in the system, so we don't have operations to interact with this catalog, we only used it
+* the parameter `name` is unique for the Hotel model.
+* we only have 2 required fields for the Hotel model (`name` and `address`).
+* the parameter `rating` is a positive integer between 1 and 10 and is optional.
+* for any internal and possible error we return `SERVICE_UNAVAILABLE` HTTP-503
+* for the `delete` operation we apply `soft` delete instead of `hard` delete
+
+### Architecture
+
+```mermaid
+flowchart TB
+    A(Clients) <-->|network| B(REST API - Spring 5 MVC, Tomcat 8)
+    B <--> |network| C(fa:fa-code SOAP Service - Spring-boot 2x)
+    C <-->|JPA| F[fa:fa-database SQL]
+```
+
+### Missing milestones
+* unitTest
+* full integrationTest
+* test coverage
+* full documentation
