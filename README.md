@@ -14,3 +14,18 @@
 * the parameter `rating` is a positive integer between 1 and 10 and is optional.
 * for any internal and possible error we return `SERVICE_UNAVAILABLE` HTTP-503
 * for the `delete` operation we apply `soft` delete instead of `hard` delete
+
+### Architecture
+
+```mermaid
+flowchart TB
+    A(Clients) <-->|network| B(REST API - Spring 5 MVC, Tomcat 8)
+    B <--> |network| C(fa:fa-code SOAP Service - Spring-boot 2x)
+    C <-->|JPA| F[fa:fa-database SQL]
+```
+
+### Missing milestones
+* unitTest
+* full integrationTest
+* test coverage
+* full documentation
