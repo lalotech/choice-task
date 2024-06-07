@@ -66,22 +66,21 @@ public class HotelProvider implements HotelService {
 
     @Override
     public void deleteHotel(Long id) {
-        hotelsRepository.findById(id).ifPresent(hotel -> {
-            if (hotel.getActive()) {
-                hotel.setActive(Boolean.FALSE);
-                hotelsRepository.save(hotel);
-                log.info("Soft Deleted hotel id:{}", hotel.getId());
-            } else {
-                log.warn("Hotel with id {} is not active", id);
-            }
-        });
+        Hotel hotel = hotelsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
+        if (hotel.getActive()) {
+            hotel.setActive(Boolean.FALSE);
+            hotelsRepository.save(hotel);
+            log.info("Soft Deleted hotel id:{}", hotel.getId());
+        } else {
+            log.warn("Hotel with id {} is not active", id);
+        }
     }
 
     @Transactional
     @Override
     public Hotel createHotel(com.choice.eduardo.spring.soap.gen.Hotel hotel) throws IllegalArgumentException {
         log.debug("Creating a hotel with name:{}", hotel.getName());
-        Hotel exists = hotelsRepository.findByName(hotel.getName());
+        Hotel exists = hotelsRepository.findByName(hotel.getName()).orElse(null);
         if (exists != null) {
             log.warn("Hotel with name `{}` already exists, skipping creation", hotel.getName());
             throw new IllegalArgumentException("Hotel with name `" + hotel.getName() + "` already exists");
@@ -99,26 +98,30 @@ public class HotelProvider implements HotelService {
 
     @Transactional
     @Override
-    public void updateHotel(com.choice.eduardo.spring.soap.gen.Hotel hotel) throws IllegalArgumentException {
+    public Hotel updateHotel(com.choice.eduardo.spring.soap.gen.Hotel hotel) throws IllegalArgumentException {
         log.debug("Updating hotel with id:{}", hotel.getId());
         Hotel fetched = hotelsRepository.findById(hotel.getId()).orElse(null);
         if (fetched == null) {
-            log.warn("Hotel with name:{} and id:{} not found ", hotel.getName(), hotel.getId());
+            log.warn("Hotel with id:{} not found ", hotel.getId());
             throw new IllegalArgumentException("Hotel with name:" + hotel.getName() + " and id:" + hotel.getId() + " not found");
-        } else {
-            String currentAmenities = HotelDataMapper.buildAmenitiesJoiner(fetched.getAmenities());
-            if(!currentAmenities.equals(hotel.getAmenities())) {
-                log.debug("Amenities changed from {} to {} in id:{}", currentAmenities, hotel.getAmenities(), hotel.getId());
-                List<Long> amenitiesIds = this.parseAmenitiesIds(hotel.getAmenities());
-                List<Amenity> amenities = amenitiesRepository.findAllById(amenitiesIds);
-                fetched.setAmenities(amenities);
-            }
-            fetched.setName(hotel.getName());
-            fetched.setAddress(hotel.getAddress());
-            fetched.setRating(hotel.getRating());
-            fetched.setLastUpdated(LocalDateTime.now(ZoneId.of("UTC")));
-            hotelsRepository.save(fetched);
         }
+        Hotel exists = hotelsRepository.findByName(hotel.getName()).orElse(null);
+        if (exists != null && !exists.getId().equals(hotel.getId())) {
+            log.warn("Hotel with name `{}` already exists, skipping update", hotel.getName());
+            throw new IllegalArgumentException("Hotel with name `" + hotel.getName() + "` already exists");
+        }
+        String currentAmenities = HotelDataMapper.buildAmenitiesJoiner(fetched.getAmenities());
+        if (!currentAmenities.equals(hotel.getAmenities())) {
+            log.debug("Amenities changed from {} to {} in id:{}", currentAmenities, hotel.getAmenities(), hotel.getId());
+            List<Long> amenitiesIds = this.parseAmenitiesIds(hotel.getAmenities());
+            List<Amenity> amenities = amenitiesRepository.findAllById(amenitiesIds);
+            fetched.setAmenities(amenities);
+        }
+        fetched.setName(hotel.getName());
+        fetched.setAddress(hotel.getAddress());
+        fetched.setRating(hotel.getRating());
+        fetched.setLastUpdated(LocalDateTime.now(ZoneId.of("UTC")));
+        return hotelsRepository.save(fetched);
     }
 
     private List<Long> parseAmenitiesIds(String amenitiesIds) {
