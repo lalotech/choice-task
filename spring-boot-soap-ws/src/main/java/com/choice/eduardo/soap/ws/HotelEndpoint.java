@@ -1,5 +1,6 @@
 package com.choice.eduardo.soap.ws;
 
+import com.choice.eduardo.soap.model.Hotel;
 import com.choice.eduardo.soap.model.PageFields;
 import com.choice.eduardo.soap.model.HotelFilter;
 import com.choice.eduardo.soap.service.HotelService;
@@ -8,6 +9,7 @@ import com.choice.eduardo.spring.soap.gen.CommonResponse;
 import com.choice.eduardo.spring.soap.gen.CreateHotelRequest;
 import com.choice.eduardo.spring.soap.gen.DeleteHotelRequest;
 import com.choice.eduardo.spring.soap.gen.GetAmenitiesResponse;
+import com.choice.eduardo.spring.soap.gen.GetHotelRequest;
 import com.choice.eduardo.spring.soap.gen.GetHotelsRequest;
 import com.choice.eduardo.spring.soap.gen.GetHotelsResponse;
 import com.choice.eduardo.spring.soap.gen.UpdateHotelRequest;
@@ -35,7 +37,8 @@ public class HotelEndpoint {
     public CommonResponse createHotel(@RequestPayload CreateHotelRequest request) {
         CommonResponse response = new CommonResponse();
         try {
-            hotelService.createHotel(request.getHotel());
+            Hotel hotel = hotelService.createHotel(request.getHotel());
+            response.setId(hotel.getId());
             response.setSuccess(true);
         } catch (IllegalArgumentException iae) {
             log.error("Error creating hotel", iae);
@@ -89,6 +92,18 @@ public class HotelEndpoint {
         response.setPages(data.getSecond().get(PageFields.PAGES.getKey()));
         response.setElements(data.getSecond().get(PageFields.ELEMENTS.getKey()));
         response.setCurrentPage(data.getSecond().get(PageFields.CURRENT_PAGE.getKey()));
+        return response;
+    }
+
+    @PayloadRoot(namespace = HotelService.NAMESPACE, localPart = "getHotelRequest")
+    @ResponsePayload
+    public GetHotelsResponse getHotel(@RequestPayload GetHotelRequest request) {
+        log.debug("getHotel by id:{}", request.getId());
+        com.choice.eduardo.soap.model.Hotel hotel = hotelService.readById(request.getId());
+        GetHotelsResponse response = new GetHotelsResponse();
+        if (hotel != null) {
+            response.getHotel().add(HotelDataMapper.hotelToHotelXml(hotel));
+        }
         return response;
     }
 

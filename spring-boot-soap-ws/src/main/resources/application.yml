@@ -7,9 +7,9 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
         show_sql: false
   datasource:
-    username: ${CHOICE_DB_USER}
-    password: ${CHOICE_DB_PASS}
-    url: jdbc:mariadb://${CHOICE_DB_URL}:${CHOICE_DB_PORT}/${CHOICE_DB_NAME}
+    username: ${CHOICE_DB_USERNAME}
+    password: ${CHOICE_DB_PASSWORD}
+    url: jdbc:mariadb://${CHOICE_DB_HOST}:${CHOICE_DB_PORT}/${CHOICE_DB_NAME}
     driver-class-name: org.mariadb.jdbc.Driver
 
 logging:
@@ -18,3 +18,6 @@ logging:
     org.springframework.web: ERROR
     com.choice: DEBUG
     org.hibernate: ERROR
+
+server:
+  port: 8080

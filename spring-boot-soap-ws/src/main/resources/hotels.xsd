@@ -4,11 +4,25 @@
            targetNamespace="http://www.choice.com/eduardo/spring/soap/gen"
            elementFormDefault="qualified">
 
-    <xs:element name="getAmenitiesRequest"/>
+    <xs:element name="getAmenitiesRequest" >
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="getAmenitiesResponse">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="Amenity" maxOccurs="unbounded" minOccurs="0" type="tns:amenity"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getHotelRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -63,6 +77,7 @@
             <xs:sequence>
                 <xs:element name="success" type="xs:boolean"/>
                 <xs:element name="message" type="xs:string" minOccurs="0" />
+                <xs:element name="id" type="xs:long" minOccurs="0" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -72,7 +87,7 @@
             <xs:element name="id" type="xs:long"/>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="address" type="xs:string"/>
-            <xs:element name="ratting" type="xs:int"/>
+            <xs:element name="rating" type="xs:int"/>
             <xs:element name="amenities" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
